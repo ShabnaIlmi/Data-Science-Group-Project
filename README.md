@@ -20,4 +20,4 @@ Ensure you have the following installed on your system:
 ### Installation
 1. Clone the repository:
    ```sh
-   git clone <YOUR_GIT_URL>
+   git clone https://github.com/ShabnaIlmi/Data-Science-Group-Project/edit/front-end-website
