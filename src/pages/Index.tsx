@@ -35,7 +35,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen hero-gradient">
+    <div className="hero-gradient">
       <div className="container mx-auto px-4 py-16">
         <header className="text-center mb-16 animate-fade-in">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
