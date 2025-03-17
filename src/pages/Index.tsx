@@ -1,8 +1,11 @@
 
 import { FlaskConical, Users, Activity, TrendingUp } from "lucide-react";
 import RiskCard from "@/components/RiskCard";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { isAuthenticated } = useAuth();
+
   const riskCards = [
     {
       title: "Importer Risk Prediction",
@@ -10,6 +13,7 @@ const Index = () => {
       icon: <FlaskConical className="w-8 h-8" />,
       action: "Analyze Risk",
       path: "/importer-risk",
+      requiresAuth: false
     },
     {
       title: "End-User Prediction",
@@ -17,6 +21,7 @@ const Index = () => {
       icon: <Users className="w-8 h-8" />,
       action: "Explore Tools",
       path: "/end-user-risk",
+      requiresAuth: false
     },
     {
       title: "Risk Analysis",
@@ -24,6 +29,7 @@ const Index = () => {
       icon: <Activity className="w-8 h-8" />,
       action: "Analyze Now",
       path: "/recipe-risk",
+      requiresAuth: false
     },
     {
       title: "Future Risk Analysis",
@@ -31,6 +37,7 @@ const Index = () => {
       icon: <TrendingUp className="w-8 h-8" />,
       action: "View Trends",
       path: "/future-risk",
+      requiresAuth: false
     },
   ];
 
@@ -48,7 +55,9 @@ const Index = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-up">
           {riskCards.map((card, index) => (
-            <RiskCard key={index} {...card} />
+            <div key={index} className="relative">
+              <RiskCard {...card} />
+            </div>
           ))}
         </div>
       </div>
