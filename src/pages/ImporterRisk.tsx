@@ -1,11 +1,56 @@
-
 import { Form } from "@/components/ui/form";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Building2, AlertCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const ImporterRisk = () => {
+  // Data for dropdown menus
+  const hsCodeOptions = [
+    "282619", "280700", "283711", "280800", "282611", "280120", 
+    "280110", "280130", "282911", "310210", "283719", "284800"
+  ];
+  
+  const chemicalNameOptions = [
+    "Fluorides; fluorosilicates, fluoroaluminates, and other complex fluorine salts",
+    "Sulphuric acid; oleum",
+    "Cyanides and cyanide oxides: Of sodium",
+    "Nitric acid; sulphonitric acids",
+    "Halides and halide oxides of non-metals",
+    "Iodine",
+    "Chlorine",
+    "Bromine",
+    "Chlorates and perchlorates; bromates and perbromates; iodates and periodates",
+    "Mineral or chemical fertilizers, nitrogenous",
+    "Cyanides and cyanide oxides: Other",
+    "Hydrogen peroxide, whether or not solidified with urea"
+  ];
+  
+  const countryOfOriginOptions = [
+    "Pakistan", "Brazil", "India", "China", "USA", "Germany", 
+    "South Korea", "France", "Russia", "United Kingdom", "Japan", "Canada"
+  ];
+  
+  const importationDescriptionOptions = [
+    "Used in aluminum smelting & glass manufacturing",
+    "Petroleum refining & chemical synthesis",
+    "Gold mining & electroplating industry",
+    "Used in fertilizer manufacturing & explosives production",
+    "Semiconductor manufacturing & etching process",
+    "Pharmaceutical & medical applications",
+    "Industrial water purification & disinfection",
+    "Used in flame retardants & water treatment",
+    "Manufacturing of explosives & oxidizing agents",
+    "Agriculture sector, soil nutrient enhancement",
+    "Used in synthetic organic chemistry & pest control",
+    "Textile bleaching & paper pulp industry"
+  ];
+  
+  const complianceHistoryOptions = ["Excellent", "Good", "Average", "Poor"];
+  
+  const financialStabilityOptions = ["High", "Medium", "Low"];
+
   return (
     <div className="min-h-screen hero-gradient py-16">
       <div className="container mx-auto px-4">
@@ -31,12 +76,103 @@ const ImporterRisk = () => {
                   className="w-full" 
                 />
               </div>
+              
+              {/* HS Code Dropdown */}
               <div>
-                <Input 
-                  placeholder="Chemical Category" 
-                  className="w-full" 
-                />
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="HS Code" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {hsCodeOptions.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+              
+              {/* Chemical Name Dropdown */}
+              <div>
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Chemical Name" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {chemicalNameOptions.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Country of Origin Dropdown */}
+              <div>
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Country of Origin" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countryOfOriginOptions.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Importation Description Dropdown */}
+              <div>
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Importation Description" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {importationDescriptionOptions.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Compliance History Dropdown */}
+              <div>
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Compliance History" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {complianceHistoryOptions.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Financial Stability Dropdown */}
+              <div>
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Financial Stability" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {financialStabilityOptions.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
               <div>
                 <Input 
                   placeholder="Import Volume (kg/L)" 
@@ -44,6 +180,7 @@ const ImporterRisk = () => {
                   className="w-full" 
                 />
               </div>
+              
               <Button className="w-full bg-gradient-to-r from-teal-400 to-teal-500">
                 Analyze Risk
               </Button>
