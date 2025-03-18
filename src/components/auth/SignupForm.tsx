@@ -18,32 +18,28 @@ export function SignupForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
-      // In a real app, this would call an authentication API
-      // For now, we'll simulate a successful registration
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Store auth state in localStorage
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('user', JSON.stringify({ name, email }));
-      
-      toast({
-        title: "Account created",
-        description: "Welcome to ChemRisk AI!",
+      const response = await fetch("http://127.0.0.1:5000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
       });
-      
-      navigate('/');
+  
+      const result = await response.json();
+      if (response.ok) {
+        toast({ title: "Account created", description: "You can now log in!" });
+        navigate("/login");
+      } else {
+        toast({ title: "Signup failed", description: result.message, variant: "destructive" });
+      }
     } catch (error) {
-      toast({
-        title: "Registration failed",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
+      toast({ title: "Signup error", description: "Something went wrong.", variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">

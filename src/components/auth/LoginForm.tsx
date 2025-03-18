@@ -17,32 +17,29 @@ export function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
-      // In a real app, this would call an authentication API
-      // For now, we'll simulate a successful login
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Store auth state in localStorage
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('user', JSON.stringify({ email }));
-      
-      toast({
-        title: "Login successful",
-        description: "Welcome back!",
+      const response = await fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-      
-      navigate('/');
+  
+      const result = await response.json();
+      if (response.ok) {
+        localStorage.setItem("token", result.token); // Store token
+        toast({ title: "Login successful", description: "Welcome back!" });
+        navigate("/");
+      } else {
+        toast({ title: "Login failed", description: result.message, variant: "destructive" });
+      }
     } catch (error) {
-      toast({
-        title: "Login failed",
-        description: "Please check your credentials and try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Login error", description: "Something went wrong.", variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">

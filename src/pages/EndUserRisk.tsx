@@ -1,10 +1,16 @@
-
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Users, BarChart2 } from "lucide-react";
+import { Users, BarChart2, Calendar } from "lucide-react";
+import { Select } from "@/components/ui/select";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useState } from "react";
+import { format } from "date-fns";
 
 const EndUserRisk = () => {
+  const [date, setDate] = useState(null);
+
   return (
     <div className="min-h-screen hero-gradient py-16">
       <div className="container mx-auto px-4">
@@ -26,7 +32,7 @@ const EndUserRisk = () => {
             <form className="space-y-4">
               <div>
                 <Input 
-                  placeholder="End User ID" 
+                  placeholder="Customer Name" 
                   className="w-full" 
                 />
               </div>
@@ -36,11 +42,40 @@ const EndUserRisk = () => {
                   className="w-full" 
                 />
               </div>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <Input 
+                    placeholder="Chemical Quantity" 
+                    className="w-full" 
+                    type="number"
+                  />
+                </div>
+                <div className="w-32">
+                  <Select>
+                    <select className="w-full h-10 px-3 py-2 border rounded-md">
+                      <option value="gram">g</option>
+                      <option value="kilogram">kg</option>
+                    </select>
+                  </Select>
+                </div>
+              </div>
               <div>
-                <Input 
-                  placeholder="Purchase Frequency" 
-                  className="w-full" 
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                      <Calendar className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : "Select Purchase Date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <CalendarComponent
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               <Button className="w-full bg-gradient-to-r from-teal-400 to-teal-500">
                 Analyze Patterns

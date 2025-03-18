@@ -58,7 +58,7 @@ const RecipeRisk = () => {
   const onSubmit = async (data: FormValues) => {
     console.log("Sending data to API:", data);
     setRiskResult(null); // Reset previous result
-
+  
     try {
       const response = await fetch("http://127.0.0.1:5000/analyze", {
         method: "POST",
@@ -67,15 +67,23 @@ const RecipeRisk = () => {
         },
         body: JSON.stringify(data),
       });
-
+  
       const result = await response.json();
       console.log("API Response:", result);
-      setRiskResult({ risk_level: result.risk_level, message: result.message });
+  
+      setRiskResult({
+        risk_level: result.overall_risk_level,
+        message: `Explosiveness: ${result.explosiveness}, Health Risk: ${result.health_risk}, Risk Score: ${result.risk_score}`,
+      });
     } catch (error) {
       console.error("Error connecting to API:", error);
-      setRiskResult({ risk_level: "Error", message: "Failed to analyze. Please try again." });
+      setRiskResult({
+        risk_level: "Error",
+        message: "Failed to analyze. Please try again.",
+      });
     }
   };
+  
 
   return (
     <div className="min-h-screen hero-gradient py-16">

@@ -72,7 +72,8 @@ const ImporterRisk = () => {
             <form className="space-y-4">
               <div>
                 <Input 
-                  placeholder="Importer License ID" 
+                  placeholder="Import Frequency"
+                  type="number"
                   className="w-full" 
                 />
               </div>
