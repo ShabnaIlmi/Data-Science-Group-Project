@@ -1,55 +1,96 @@
-import { Form } from "@/components/ui/form";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Building2, AlertCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Building2, AlertCircle } from "lucide-react";
 
 const ImporterRisk = () => {
-  // Data for dropdown menus
-  const hsCodeOptions = [
-    "282619", "280700", "283711", "280800", "282611", "280120", 
-    "280110", "280130", "282911", "310210", "283719", "284800"
-  ];
-  
+  // State to manage user inputs
+  const [importerData, setImporterData] = useState({
+    importerId: "",
+    importFrequency: "",
+    hsCode: "",
+    chemicalName: "",
+    countryOfOrigin: "",
+    importationDescription: "",
+    complianceHistory: "",
+    financialStability: "",
+    importVolume: ""
+  });
+
+  // State to manage response from Flask API
+  const [riskData, setRiskData] = useState(null);
+
+  // Data for dropdowns
+  const hsCodeOptions = ["282619", "280700", "283711", "280800", "282611", "280120"];
   const chemicalNameOptions = [
     "Fluorides; fluorosilicates, fluoroaluminates, and other complex fluorine salts",
-    "Sulphuric acid; oleum",
-    "Cyanides and cyanide oxides: Of sodium",
-    "Nitric acid; sulphonitric acids",
-    "Halides and halide oxides of non-metals",
-    "Iodine",
-    "Chlorine",
-    "Bromine",
-    "Chlorates and perchlorates; bromates and perbromates; iodates and periodates",
-    "Mineral or chemical fertilizers, nitrogenous",
-    "Cyanides and cyanide oxides: Other",
-    "Hydrogen peroxide, whether or not solidified with urea"
+    "Sulphuric acid; oleum"
+    // Add more options here
   ];
-  
-  const countryOfOriginOptions = [
-    "Pakistan", "Brazil", "India", "China", "USA", "Germany", 
-    "South Korea", "France", "Russia", "United Kingdom", "Japan", "Canada"
-  ];
-  
+  const countryOfOriginOptions = ["Pakistan", "Brazil", "India", "China", "USA"];
   const importationDescriptionOptions = [
     "Used in aluminum smelting & glass manufacturing",
-    "Petroleum refining & chemical synthesis",
-    "Gold mining & electroplating industry",
-    "Used in fertilizer manufacturing & explosives production",
-    "Semiconductor manufacturing & etching process",
-    "Pharmaceutical & medical applications",
-    "Industrial water purification & disinfection",
-    "Used in flame retardants & water treatment",
-    "Manufacturing of explosives & oxidizing agents",
-    "Agriculture sector, soil nutrient enhancement",
-    "Used in synthetic organic chemistry & pest control",
-    "Textile bleaching & paper pulp industry"
+    "Petroleum refining & chemical synthesis"
+    // Add more options here
   ];
-  
   const complianceHistoryOptions = ["Excellent", "Good", "Average", "Poor"];
-  
   const financialStabilityOptions = ["High", "Medium", "Low"];
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setImporterData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (e, field) => {
+    const { value } = e.target;
+    setImporterData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Ensure all fields are filled out before submitting
+    const missingFields = Object.keys(importerData).filter(key => !importerData[key]);
+    
+    if (missingFields.length > 0) {
+      alert(`Please fill out the following fields: ${missingFields.join(", ")}`);
+      return;
+    }
+  
+    const dataToSend = {
+      importerId: importerData.importerId,
+      importFrequency: importerData.importFrequency,
+      hsCode: importerData.hsCode,
+      chemicalName: importerData.chemicalName,
+      countryOfOrigin: importerData.countryOfOrigin,
+      importationDescription: importerData.importationDescription,
+      complianceHistory: importerData.complianceHistory,
+      financialStability: importerData.financialStability,
+      importVolume: importerData.importVolume
+    };
+  
+    try {
+      const response = await fetch("http://localhost:5000/importer-risk", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        setRiskData(result);
+      } else {
+        const errorData = await response.json();
+        console.error("Error:", errorData);
+      }
+    } catch (error) {
+      console.error("Error sending data to Flask:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen hero-gradient py-16">
@@ -69,18 +110,29 @@ const ImporterRisk = () => {
               <Building2 className="w-6 h-6 text-teal-500" />
               <h2 className="text-xl font-semibold">Importer Details</h2>
             </div>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              {/* Input fields */}
               <div>
                 <Input 
+                  name="importerId" 
+                  value={importerData.importerId} 
+                  placeholder="Importer ID" 
+                  onChange={handleChange} 
+                />
+              </div>
+              <div>
+                <Input 
+                  name="importFrequency" 
+                  type="number" 
+                  value={importerData.importFrequency} 
                   placeholder="Import Frequency"
-                  type="number"
-                  className="w-full" 
+                  onChange={handleChange} 
                 />
               </div>
               
               {/* HS Code Dropdown */}
               <div>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange({ target: { value } }, 'hsCode')}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="HS Code" />
                   </SelectTrigger>
@@ -96,7 +148,7 @@ const ImporterRisk = () => {
               
               {/* Chemical Name Dropdown */}
               <div>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange({ target: { value } }, 'chemicalName')}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Chemical Name" />
                   </SelectTrigger>
@@ -112,7 +164,7 @@ const ImporterRisk = () => {
               
               {/* Country of Origin Dropdown */}
               <div>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange({ target: { value } }, 'countryOfOrigin')}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Country of Origin" />
                   </SelectTrigger>
@@ -128,7 +180,7 @@ const ImporterRisk = () => {
               
               {/* Importation Description Dropdown */}
               <div>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange({ target: { value } }, 'importationDescription')}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Importation Description" />
                   </SelectTrigger>
@@ -144,7 +196,7 @@ const ImporterRisk = () => {
               
               {/* Compliance History Dropdown */}
               <div>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange({ target: { value } }, 'complianceHistory')}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Compliance History" />
                   </SelectTrigger>
@@ -160,7 +212,7 @@ const ImporterRisk = () => {
               
               {/* Financial Stability Dropdown */}
               <div>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange({ target: { value } }, 'financialStability')}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Financial Stability" />
                   </SelectTrigger>
@@ -176,13 +228,15 @@ const ImporterRisk = () => {
               
               <div>
                 <Input 
+                  name="importVolume" 
                   placeholder="Import Volume (kg/L)" 
                   type="number" 
+                  value={importerData.importVolume}
+                  onChange={handleChange} 
                   className="w-full" 
                 />
               </div>
-              
-              <Button className="w-full bg-gradient-to-r from-teal-400 to-teal-500">
+              <Button className="w-full bg-gradient-to-r from-teal-400 to-teal-500" type="submit">
                 Analyze Risk
               </Button>
             </form>
@@ -194,9 +248,14 @@ const ImporterRisk = () => {
               <h2 className="text-xl font-semibold">Risk Assessment</h2>
             </div>
             <div className="space-y-6">
-              <div className="text-center p-8">
+              {riskData ? (
+                <div className="text-center p-8">
+                  <p className="text-gray-500">Risk Category: {riskData.risk_category}</p>
+                  <p className="text-gray-500">Risk Probability: {riskData.risk_probability}</p>
+                </div>
+              ) : (
                 <p className="text-gray-500">Submit importer details to see risk assessment</p>
-              </div>
+              )}
             </div>
           </Card>
         </div>
