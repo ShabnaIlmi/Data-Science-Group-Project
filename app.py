@@ -40,94 +40,38 @@ client = MongoClient(MONGO_URI)
 db = client["chemrisk"]
 users_collection = db["users"]
 
-# ---------------------- FILE PATHS CONFIGURATION ----------------------
-# Base paths for different components
-MODELS_PATH = os.path.join(os.path.dirname(__file__), "Models")
-ENCODERS_PATH = os.path.join(os.path.dirname(__file__), "Encoders")
-SCALERS_PATH = os.path.join(os.path.dirname(__file__), "Scalers")
-XAI_PATH = os.path.join(os.path.dirname(__file__), "XAI")
+# Load models and vectorizer
+vectorizer_path = os.path.abspath('tfidf_vectorizer.pkl')
+print(f"Vectorizer Absolute Path: {vectorizer_path}")
 
-# Recipe Analyzer paths
-RECIPE_MODELS_PATH = os.path.join(MODELS_PATH, "Receipe-Analyser")
-RECIPE_VECTORIZER_PATH = os.path.join(ENCODERS_PATH, "Receipe-Analyser", "tfidf_vectorizer.pkl")
-RECIPE_MODEL_PATH = os.path.join(RECIPE_MODELS_PATH, "multi_output_regressor_model.pkl")
-
-# Importer Risk paths
-IMPORTER_MODELS_PATH = os.path.join(MODELS_PATH, "Importer-Risk")
-IMPORTER_ENCODERS_PATH = os.path.join(ENCODERS_PATH, "Importer-Risk")
-IMPORTER_SCALERS_PATH = os.path.join(SCALERS_PATH, "Importer-Risk")
-IMPORTER_XAI_PATH = os.path.join(XAI_PATH, "Importer-risk")
-
-# Future Trends paths
-FUTURE_MODELS_PATH = os.path.join(MODELS_PATH, "Future-Trends")
-FUTURE_ENCODERS_PATH = os.path.join(ENCODERS_PATH, "Future-Trends")
-FUTURE_SCALERS_PATH = os.path.join(SCALERS_PATH, "Future-Trends")
-FUTURE_XAI_PATH = os.path.join(XAI_PATH, "Future-Trends")
-
-# End User Risk paths
-END_USER_MODELS_PATH = os.path.join(MODELS_PATH, "End-User-Risk")
-END_USER_ENCODERS_PATH = os.path.join(ENCODERS_PATH, "End-User-Risk")
-
-# ---------------------- LOAD MODELS AND COMPONENTS ----------------------
-
-# Recipe Analyzer models
 try:
-    vectorizer = joblib.load(RECIPE_VECTORIZER_PATH)
-    print(f"✅ Recipe Vectorizer Loaded Successfully from {RECIPE_VECTORIZER_PATH}!")
-    
-    regressor = joblib.load(RECIPE_MODEL_PATH)
-    print(f"✅ Recipe Regressor Model Loaded Successfully!")
+    vectorizer = joblib.load(vectorizer_path)
+    print("✅ Vectorizer Loaded Successfully!")
 except Exception as e:
-    print(f"❌ Error Loading Recipe Models: {e}")
+    print(f"❌ Error Loading Vectorizer: {e}")
 
-# Importer Risk Models
-try:
-    clf = joblib.load(os.path.join(IMPORTER_MODELS_PATH, "gradient_boost_classifier.pkl"))
-    reg = joblib.load(os.path.join(IMPORTER_MODELS_PATH, "gradient_boost_regressor.pkl"))
-    encoder = joblib.load(os.path.join(IMPORTER_ENCODERS_PATH, "encoder.pkl"))
-    scaler = joblib.load(os.path.join(IMPORTER_SCALERS_PATH, "scaler.pkl"))
-    label_encoder = joblib.load(os.path.join(IMPORTER_ENCODERS_PATH, "label_encoder.pkl"))
-    print("✅ Importer Risk Models Loaded Successfully!")
-except Exception as e:
-    print(f"❌ Error Loading Importer Risk Models: {e}")
+regressor = joblib.load('multi_output_regressor_model.pkl')
 
-# Future Trends Models
-try:
-    model_future = joblib.load(os.path.join(FUTURE_MODELS_PATH, "nn_model.pkl"))
-    scaler_future = joblib.load(os.path.join(FUTURE_SCALERS_PATH, "scaler_future.pkl"))
-    le = joblib.load(os.path.join(FUTURE_ENCODERS_PATH, "label_encoder_future.pkl"))
-    trained_columns = joblib.load(os.path.join(FUTURE_XAI_PATH, "trained_columns.pkl"))
-    print("✅ Future Trends Models Loaded Successfully!")
-except Exception as e:
-    print(f"❌ Error Loading Future Trends Models: {e}")
+# Load Importer Risk Models
+clf = joblib.load("gradient_boost_classifier.pkl")
+reg = joblib.load("gradient_boost_regressor.pkl")
+encoder = joblib.load("encoder.pkl")
+scaler = joblib.load("scaler.pkl")
+label_encoder = joblib.load("label_encoder.pkl")
 
-# End User Risk Models
-try:
-    rf_model = joblib.load(os.path.join(END_USER_MODELS_PATH, "Random_forest_model.pkl"))
-    label_encoders = joblib.load(os.path.join(END_USER_ENCODERS_PATH, "End_User_Label_Encoder.pkl"))
-    print("✅ End User Risk Models Loaded Successfully!")
-except Exception as e:
-    print(f"❌ Error Loading End User Risk Models: {e}")
+# Load saved model, scaler, label encoder, and trained columns - Future Trends
+model_future = joblib.load('nn_model.pkl')
+scaler_future = joblib.load('scaler_future.pkl')
+le = joblib.load('label_encoder_future.pkl')
+trained_columns = joblib.load('trained_columns.pkl')
 
-# Load XAI training samples
-try:
-    X_train_sample = joblib.load(os.path.join(IMPORTER_XAI_PATH, "X_train_sample.pkl"))
-    y_train_sample = joblib.load(os.path.join(IMPORTER_XAI_PATH, "y_train_sample.pkl"))
-    print("✅ XAI Training Samples Loaded Successfully!")
-except Exception as e:
-    print(f"❌ Error Loading XAI Training Samples: {e}")
-    X_train_sample = None
-    y_train_sample = None
-
-# Define Categorical and Numerical Columns for Importer Risk
+# Define Categorical and Numerical Columns
 categorical_cols = ["Chemical_Name", "Country_of_Origin", "Importation_Description", "Compliance_History", "Financial_Stability"]
 numerical_cols = ["Import_Frequency", "Past_Violations", "Import_Quantity (kg)", "HS Code"]
 
-# Define categorical and numerical columns for End User Risk
-end_user_categorical_columns = ['Customer name', 'Product code', 'Invoice No', 'UOM', 'Warehouse']
-end_user_numerical_columns = ['Issued Qty', 'Transaction Date']
-
 # Initialize LIME explainer
+# Note: We'll load this in the importer-risk route to avoid errors during startup
+# since we don't have X_train_class available here
 lime_explainer = None
 
 # --------------------- AUTHENTICATION ROUTES ---------------------
@@ -386,8 +330,11 @@ def get_lime_explanations(processed_input, num_features=5):
     
     # Check if we have a training dataset loaded to initialize LIME
     try:
-        # Initialize LIME explainer if not already done
-        if lime_explainer is None and X_train_sample is not None:
+        # If X_train_class is not available, we'll load a sample dataset
+        # This is a placeholder - in production, you'd load your actual training data
+        if lime_explainer is None:
+            # Load a sample of training data
+            X_train_sample = joblib.load("X_train_sample.pkl")
             lime_explainer = lime.lime_tabular.LimeTabularExplainer(
                 X_train_sample.values,
                 feature_names=X_train_sample.columns.tolist(),
@@ -420,21 +367,21 @@ def get_lime_explanations(processed_input, num_features=5):
         return {"error": str(e)}
 
 # Helper function to get SHAP explanations
-def get_shap_explanations(processed_input, model):
+def get_shap_explanations(processed_input, model, X_train_sample_path="X_train_sample.pkl"):
     """
     Generate SHAP explanations for the importer risk prediction.
     
     Args:
         processed_input: The processed input data
         model: The trained model (classifier)
+        X_train_sample_path: Path to a sample of training data for SHAP explainer
     
     Returns:
         Dictionary with SHAP values and feature importance plot
     """
     try:
-        # Use the loaded sample training data for the explainer
-        if X_train_sample is None:
-            return {"error": "Training sample data not available for SHAP explainer"}
+        # Load sample training data for the explainer
+        X_train_sample = joblib.load(X_train_sample_path)
         
         # Initialize SHAP explainer
         explainer = shap.Explainer(model, X_train_sample)
@@ -599,9 +546,9 @@ def generate_shap_summary_plot(output_path="shap_summary_plot.png"):
         True if successful, False otherwise
     """
     try:
-        # Check if training samples are available
-        if X_train_sample is None or y_train_sample is None:
-            return False
+        # Load sample training data and labels
+        X_train_sample = joblib.load("X_train_sample.pkl")
+        y_train_sample = joblib.load("y_train_sample.pkl")
         
         # Initialize SHAP explainer
         explainer = shap.Explainer(clf, X_train_sample)
@@ -635,7 +582,7 @@ def generate_shap_summary():
     Endpoint to generate a SHAP summary plot for model analysis.
     """
     try:
-        output_path = os.path.join(IMPORTER_XAI_PATH, "shap_summary_plot.png")
+        output_path = "shap_summary_plot.png"
         success = generate_shap_summary_plot(output_path)
         
         if success:
@@ -655,6 +602,14 @@ def generate_shap_summary():
         return jsonify({"error": f"Server error: {str(e)}"}), 500
     
 # --------------------- END-USER RISK PREDICTION ---------------------    
+
+# Load saved model and preprocessing objects
+rf_model = joblib.load("Random_forest_model.pkl")
+label_encoders = joblib.load("End_User_Label_Encoder.pkl")
+
+# Define categorical and numerical columns (must match the ones used during training)
+end_user_categorical_columns = ['Customer name', 'Product code', 'Invoice No', 'UOM', 'Warehouse']
+end_user_numerical_columns = ['Issued Qty', 'Transaction Date']
 
 # Prediction Function
 def predict_risk_level(customer_name, issued_qty, transaction_date, product_code):
@@ -727,7 +682,7 @@ def predict_risk():
 
         # Predict risk level
         predicted_risk = predict_risk_level(customer_name, issued_qty, transaction_date, product_code)
-        print("Predicted risk:", predicted_risk)    
+        print("Predicted risk:", predicted_risk)  
 
         # Convert numpy.int64 to a standard Python integer
         predicted_risk = int(predicted_risk)
@@ -742,4 +697,3 @@ def predict_risk():
 # --------------------- RUN FLASK APP ---------------------
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
-    
