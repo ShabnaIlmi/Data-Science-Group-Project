@@ -177,13 +177,11 @@ For any questions or issues, please contact the following members:
 Fathima Shabna Ilmi (Project Leader)
 Email: fathima.20230079@iit.ac.lk
 
-Member 1 Senuth Perera
+Senuth Perera
 Email: senuth.20230317@iit.ac.lk
 
-Member 2 Kalana Kannangara
+Kalana Kannangara
 Email: kalana.20232632@iit.ac.lk
 
-Member 3 Loganathan Thusharkanth
+Loganathan Thusharkanth
 Email: thusharkanth.20233168@iit.ac.lk
-
-
