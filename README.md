@@ -88,7 +88,7 @@ The **Colab notebooks** contain the following:
    npm start
    ```
 
-This will launch the React app on your local server (typically at http://localhost:3000).
+This will launch the React app on your local server (typically at http://localhost:8081).
 
 ### **Backend Setup**
 
