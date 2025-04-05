@@ -71,203 +71,107 @@ The **Colab notebooks** contain the following:
 - **Python 3.6 or higher** (for the backend and models)
 - **pip** (Python package manager)
 
----
-
 ### **Frontend Setup (React.js)**
 
 1. Navigate to the frontend directory:
    ```bash
    cd frontend
+   ```
 
-nstall the required dependencies:
+2. Install the required dependencies:
+   ```bash
+   npm install
+   ```
 
-bash
-Copy
-Edit
-npm install
-Start the frontend server:
+3. Start the frontend server:
+   ```bash
+   npm start
+   ```
 
-bash
-Copy
-Edit
-npm start
 This will launch the React app on your local server (typically at http://localhost:3000).
 
-Backend (Machine Learning Models)
-The backend contains the models responsible for predicting risks. The backend includes:
+### **Backend Setup**
 
-Risk prediction models for importers, end-users, and chemical recipes.
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
 
-APIs that provide data to the frontend and handle incoming requests.
+2. Install the required Python libraries:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Data preprocessing and feature engineering to prepare the dataset for model training.
+3. Run the backend server (Flask/Django):
+   ```bash
+   python app.py  # or use the command specific to your framework
+   ```
 
-Backend Setup
-Navigate to the backend directory:
+### **Colab Notebooks**
+1. Open the finalized model training notebooks in Google Colab.
+2. Run the cells to train the models, evaluate them, and save the final trained models.
 
-bash
-Copy
-Edit
-cd backend
-Install the required Python libraries:
-
-bash
-Copy
-Edit
-pip install -r requirements.txt
-Run the backend server (Flask/Django):
-
-bash
-Copy
-Edit
-python app.py  # or use the command specific to your framework
-Finalized Colab Notebooks
-The Colab notebooks contain the following:
-
-Data preprocessing steps for cleaning and transforming data.
-
-Model training using Gradient Boosting Classifiers and Regressors.
-
-Model evaluation to assess the performance of the trained models.
-
-Hyperparameter tuning for better accuracy and precision.
-
-Technologies Used
-Frontend: React.js, HTML, CSS, JavaScript
-
-Backend: Python, Flask/Django (depending on your backend framework), Scikit-learn (for ML models)
-
-Machine Learning: Gradient Boosting Classifier, Gradient Boosting Regressor
-
-Data Processing: Pandas, NumPy
-
-Deployment: Docker (if applicable), Heroku/AWS (for deployment)
-
-Visualization: Matplotlib, Seaborn (for visualizing results)
-
-Setup and Installation
-Prerequisites
-Node.js (for the React.js frontend)
-
-Python 3.6 or higher (for the backend and models)
-
-pip (Python package manager)
-
-Frontend Setup (React.js)
-Navigate to the frontend directory:
-
-bash
-Copy
-Edit
-cd frontend
-Install the required dependencies:
-
-bash
-Copy
-Edit
-npm install
-Start the frontend server:
-
-bash
-Copy
-Edit
-npm start
-This will launch the React app on your local server (typically at http://localhost:3000).
-
-Backend Setup
-Navigate to the backend directory:
-
-bash
-Copy
-Edit
-cd backend
-Install the required Python libraries:
-
-bash
-Copy
-Edit
-pip install -r requirements.txt
-Run the backend server (Flask/Django):
-
-bash
-Copy
-Edit
-python app.py  # or use the command specific to your framework
-Colab Notebooks
-Open the finalized model training notebooks in Google Colab.
-
-Run the cells to train the models, evaluate them, and save the final trained models.
-
-Requirements File (requirements.txt)
+### **Requirements File (requirements.txt)**
 Make sure the backend/requirements.txt contains the necessary libraries:
 
-txt
-Copy
-Edit
+```txt
 pandas
 numpy
 scikit-learn
 flask  # or django if you're using Django
 matplotlib
 seaborn
-Usage
-1. Frontend (React.js)
+```
+
+---
+
+## **Usage**
+
+### **1. Frontend (React.js)**
 Navigate to the React.js frontend and interact with the user interface:
+- Submit data for chemical importation, end-users, or recipes.
+- View risk prediction results.
+- Receive alerts based on suspicious activity or potential risks.
 
-Submit data for chemical importation, end-users, or recipes.
-
-View risk prediction results.
-
-Receive alerts based on suspicious activity or potential risks.
-
-2. Backend (Model APIs)
+### **2. Backend (Model APIs)**
 The backend exposes APIs that interact with the models. These APIs are designed to:
+- Handle incoming user data.
+- Make predictions based on the trained models.
+- Provide feedback to the frontend for display.
 
-Handle incoming user data.
+### **3. Finalized Model Training (Colab Notebooks)**
+- Use the Colab notebooks for retraining or testing the models.
+- Implement any changes or updates to the training scripts as needed.
 
-Make predictions based on the trained models.
+---
 
-Provide feedback to the frontend for display.
-
-3. Finalized Model Training (Colab Notebooks)
-Use the Colab notebooks for retraining or testing the models.
-
-Implement any changes or updates to the training scripts as needed.
-
-Contributing
+## **Contributing**
 We welcome contributions to improve the project! To contribute:
 
-Fork the repository.
+1. Fork the repository.
+2. Create a new branch for your feature (`git checkout -b feature-name`).
+3. Make your changes and commit (`git commit -am 'Add feature-name'`).
+4. Push to your branch (`git push origin feature-name`).
+5. Open a pull request.
 
-Create a new branch for your feature (git checkout -b feature-name).
+---
 
-Make your changes and commit (git commit -am 'Add feature-name').
-
-Push to your branch (git push origin feature-name).
-
-Open a pull request.
-
-License
+## **License**
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Contact
+---
+
+## **Contact**
 For any questions or issues, please contact the following members:
 
-Fathima Shabna Ilmi (Project Leader)
-Email: fathima.20230079@iit.ac.lk
+- **Fathima Shabna Ilmi** (Project Leader)  
+  Email: fathima.20230079@iit.ac.lk
 
-Senuth Perera
-Email: senuth.20230317@iit.ac.lk
+- **Senuth Perera**  
+  Email: senuth.20230317@iit.ac.lk
 
-Kalana Kannangara
-Email: kalana.20232632@iit.ac.lk
+- **Kalana Kannangara**  
+  Email: kalana.20232632@iit.ac.lk
 
-Loganathan Thusharkanth
-Email: thusharkanth.20233168@iit.ac.lk
-
-pgsql
-Copy
-Edit
-
-This version includes all the necessary bash commands directly within the relevant sections fo
-   
+- **Loganathan Thusharkanth**  
+  Email: thusharkanth.20233168@iit.ac.lk
