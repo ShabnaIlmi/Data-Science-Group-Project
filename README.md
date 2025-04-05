@@ -3,7 +3,7 @@
 ## **Overview**
 This project is an AI-driven **Chemical Handling and Risk Analysis System** developed by **DSGP Group 32**. The system integrates predictive models to assess the risk associated with the importation, handling, and usage of chemicals. The project includes a **React.js frontend**, a **backend with machine learning models**, and **finalized model training scripts** in a **Colab notebook**.
 
-The system utilizes **Gradient Boosting** and other machine learning algorithms to predict risks at various stages and prevent hazardous activities related to chemical use.
+The system utilizes **Gradient Boosting**, **Neural Networks**, **Random Forest** and other machine learning algorithms to predict risks at various stages and prevent hazardous activities related to chemical use.
 
 ---
 
@@ -48,7 +48,7 @@ The backend contains the models responsible for predicting risks. The backend in
 The **Colab notebooks** contain the following:
 
 - Data preprocessing steps for cleaning and transforming data.
-- Model training using **Gradient Boosting Classifiers** and **Regressors**.
+- Model training using **Gradient Boosting Classifiers**, **Neural Networks**, **Random Forest** and **Regressors**.
 - Model evaluation to assess the performance of the trained models.
 - Hyperparameter tuning for better accuracy and precision.
 
@@ -57,7 +57,7 @@ The **Colab notebooks** contain the following:
 ## **Technologies Used**
 - **Frontend**: React.js, HTML, CSS, JavaScript
 - **Backend**: Python, Flask/Django (depending on your backend framework), Scikit-learn (for ML models)
-- **Machine Learning**: Gradient Boosting Classifier, Gradient Boosting Regressor
+- **Machine Learning**: Gradient Boosting Classifier, Neural Networks, Random Forest, Gradient Boosting Regressor
 - **Data Processing**: Pandas, NumPy
 - **Deployment**: Docker (if applicable), Heroku/AWS (for deployment)
 - **Visualization**: Matplotlib, Seaborn (for visualizing results)
@@ -118,6 +118,7 @@ Make sure the backend/requirements.txt contains the necessary libraries:
 pandas
 numpy
 scikit-learn
+tensorflow  # for Neural Networks
 flask  # or django if you're using Django
 matplotlib
 seaborn
