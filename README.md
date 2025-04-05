@@ -1,7 +1,7 @@
 # **Data Science Group Project - Chemical Handling and Risk Analysis System**
 
 ## **Overview**
-This project is an AI-driven **Chemical Handling and Risk Analysis System** developed by **DSGP Group 32**. The system integrates predictive models to assess the risk associated with the importation, handling, and usage of chemicals. The project includes a **React.js frontend**, a **backend with machine learning models**, and **finalized model training scripts** in a **Colab notebook**.
+This project is an AI-driven **Comprehensive Chemical Risk Prediction Model** as apart of our **Data Science Group Project**. The system integrates predictive models to assess the risk associated with the importation, handling, and usage of chemicals. The project includes a **React.js frontend**, a **backend with machine learning models**, and **finalized model training scripts** in a **Colab notebook**.
 
 The system utilizes **Gradient Boosting**, **Neural Networks**, **Random Forest** and other machine learning algorithms to predict risks at various stages and prevent hazardous activities related to chemical use.
 
